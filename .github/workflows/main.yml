@@ -7,7 +7,7 @@ on:
 jobs:
 
   x64_build:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     steps:
     - uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
         path: Bin/x64/Release (lite)/*.pdb
 
   x86_build:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     steps:
     - uses: actions/checkout@v3
@@ -73,7 +73,7 @@ jobs:
         path: Bin/Release (lite)/*.pdb
 
   arm64ec_build:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     steps:
     - uses: actions/checkout@v3
