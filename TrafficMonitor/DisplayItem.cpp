@@ -79,6 +79,8 @@ CString CommonDisplayItem::GetItemName() const
         case TDI_HDD_USAGE: return CCommon::LoadText(IDS_HDD_USAGE);
         case TDI_CPU_FREQ: return CCommon::LoadText(IDS_CPU_FREQ);
         case TDI_TODAY_TRAFFIC: return CCommon::LoadText(IDS_TRAFFIC_USED);
+        case TDI_GPU_MEM_DEDICATED: return CCommon::LoadText(IDS_GPU_DEDICATED_MEMORY);
+        case TDI_GPU_MEM_SHARED: return CCommon::LoadText(IDS_GPU_SHARED_MEMORY);
         default:
             ASSERT(false);
             break;
@@ -144,6 +146,12 @@ std::wstring CommonDisplayItem::DefaultString(bool is_main_window) const
         case TDI_HDD_USAGE:
             default_text = CCommon::LoadText(IDS_HDD_DISP, _T(": "));
             break;
+        case TDI_GPU_MEM_DEDICATED:
+            default_text = _T("VRAM: ");
+            break;
+        case TDI_GPU_MEM_SHARED:
+            default_text = _T("SVRAM: ");
+            break;
         default:
             ASSERT(false);
             break;
@@ -176,6 +184,8 @@ const wchar_t* CommonDisplayItem::GetItemIniKeyName() const
         case TDI_TOTAL_SPEED: return L"total_speed_string";
         case TDI_CPU_FREQ: return L"cpu_freq_string";
         case TDI_TODAY_TRAFFIC: return L"today_traffic_string";
+        case TDI_GPU_MEM_DEDICATED: return L"gpu_dedicated_memory_string";
+        case TDI_GPU_MEM_SHARED: return L"gpu_shared_memory_string";
         }
         ASSERT(FALSE);
         return L"";
@@ -239,6 +249,17 @@ CString CommonDisplayItem::GetItemValueText(bool is_main_window) const
         //显卡利用率
         case TDI_GPU_USAGE:
             str_value = CCommon::UsageToString(theApp.m_gpu_usage, *cfg_data);
+            break;
+        //显存使用量
+        case TDI_GPU_MEM_DEDICATED:
+        case TDI_GPU_MEM_SHARED:
+        {
+            long long gpu_memory{ item_type == TDI_GPU_MEM_DEDICATED ? theApp.m_gpu_dedicated_memory : theApp.m_gpu_shared_memory };
+            if (gpu_memory < 0)
+                str_value = _T("--");
+            else
+                str_value = CCommon::DataSizeToString(static_cast<unsigned long long>(gpu_memory), cfg_data->separate_value_unit_with_space);
+        }
             break;
         //硬盘利用率
         case TDI_HDD_USAGE:
@@ -310,6 +331,9 @@ CString CommonDisplayItem::GetItemValueSampleText(bool is_main_window) const
             break;
         case TDI_CPU_FREQ:
             sample_str = _T("1.0 GHz");
+            break;
+        case TDI_GPU_MEM_DEDICATED: case TDI_GPU_MEM_SHARED:
+            sample_str = _T("3.2 GB");
             break;
         default:
             sample_str = _T("99");
@@ -394,6 +418,16 @@ CString CommonDisplayItem::GetItemValueSampleText(bool is_main_window) const
                 sample_str = _T("1.00 GHz");
             else
                 sample_str = _T("1.00GHz");
+        }
+            break;
+        //显存使用量
+        case TDI_GPU_MEM_DEDICATED:
+        case TDI_GPU_MEM_SHARED:
+        {
+            if (theApp.m_taskbar_data.separate_value_unit_with_space)
+                sample_str = _T("99.9 GB");
+            else
+                sample_str = _T("99.9GB");
         }
             break;
         //流量

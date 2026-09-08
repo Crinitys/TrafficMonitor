@@ -1425,6 +1425,12 @@ void CTrafficMonitorDlg::DoMonitorAcquisition()
             theApp.m_gpu_usage = -1;
     }
 
+    //获取显存使用量（只能通过PDH获取）
+    if (!m_gpu_dedicated_memory_helper.GetGpuMemory(theApp.m_gpu_dedicated_memory))
+        theApp.m_gpu_dedicated_memory = -1;
+    if (!m_gpu_shared_memory_helper.GetGpuMemory(theApp.m_gpu_shared_memory))
+        theApp.m_gpu_shared_memory = -1;
+
     //获取硬盘利用率
     if (lite_version /*|| is_arm64ec*/ || !theApp.m_general_data.IsHardwareEnable(HI_HDD))
     {

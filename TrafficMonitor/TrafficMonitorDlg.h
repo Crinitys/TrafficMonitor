@@ -23,6 +23,7 @@
 #include "PdhHardwareQuery/CPUUsage.h"
 #include "PdhHardwareQuery/CpuFreq.h"
 #include "PdhHardwareQuery/GpuUsage.h"
+#include "PdhHardwareQuery/GpuMemory.h"
 #include "PdhHardwareQuery/DiskUsage.h"
 #include "HistoryTrafficFile.h"
 
@@ -69,6 +70,8 @@ protected:
     CCPUUsage m_cpu_usage_helper;
     CPdhCpuFreq m_cpu_freq_helper;
     CPdhGPUUsage m_gpu_usage_helper;
+    CPdhGPUMemory m_gpu_dedicated_memory_helper{ true };
+    CPdhGPUMemory m_gpu_shared_memory_helper{ false };
     CPdhDiskUsage m_disk_usage_helper;
 
     bool m_get_disk_usage_by_pdh{};
